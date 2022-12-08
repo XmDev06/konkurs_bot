@@ -6,7 +6,7 @@ use Telegram\Bot\Api;
 
 
 $botToken = "5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk";
-// https://api.telegram.org/bot5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk/setWebhook?url=https://c704-213-230-72-175.eu.ngrok.io/projects/konkurs/index.php
+// https://api.telegram.org/bot5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk/setWebhook?url=https://284c-185-139-137-43.in.ng  rok.io/projects/konkurs/index.php
 
 /**
  * @var $bot \TelegramBot\Api\Client | \TelegramBot\Api\BotApi
@@ -14,7 +14,6 @@ $botToken = "5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk";
 
 $bot = new \TelegramBot\Api\Client($botToken);
 $telegram = new Api($botToken);
-session_start();
 
 //functions
 function isMember($chatId, array $channelsId)
@@ -41,11 +40,13 @@ $bot->command('start', static function (\TelegramBot\Api\Types\Message $message)
         $checkSubscribe = "checkSubscribe";
 
         if (count(explode(" ", $text)) == 2) {
+            $phone = $message->getContact();
+            var_dump($phone);
             $referralId = explode(" ", $text)[1];
             if ($referralId != $chatId && $is_user == 0 && $isSubscribed) {
                 $connection->query("insert into referral (user_id, referral_id) values ('$referralId','$chatId')");
             } else {
-                $checkSubscribe= "checkSubscribe_$referralId";
+                $checkSubscribe = "checkSubscribe_$referralId";
             }
         }
 
@@ -88,9 +89,9 @@ $bot->callbackQuery(static function (\TelegramBot\Api\Types\CallbackQuery $callb
         $isSubscribed = (isMember($chatId, ["-1001882039432", "-1001671907228"]));
         $is_user = $connection->query("select * from users where chat_id='$chatId'")->num_rows;
 
-        if (strpos($data,"checkSubscribe")!==false) {
+        if (strpos($data, "checkSubscribe") !== false) {
             if ($isSubscribed) {
-                $referralId = explode("_",$data)[1];
+                $referralId = explode("_", $data)[1];
                 if ($referralId != $chatId && $is_user == 0) {
                     $connection->query("insert into referral (user_id, referral_id) values ('$referralId','$chatId')");
                 }
@@ -180,7 +181,6 @@ $bot->on(static function () {
                 $bot->sendMessage($chat_id, $text1);
             }
 
-
             if ($text == '♻Tanlovda ishtirok etish') {
                 $bot->sendMessage($chat_id, "Ball toʼplash uchun quyida beriladigan referal (maxsus) link orqali odam taklif qilishingiz kerak boʼladi. Taklif etilgan har bir odam uchun 1 ball beriladi");
 
@@ -190,7 +190,23 @@ $bot->on(static function () {
                 $bot->sendPhoto($chat_id, $photo, $textp);
             }
 
+            if ($text == "📊 Reyting") {
+                $data = $connection->query("SELECT COUNT(referral_id), user_id FROM referral GROUP BY user_id ORDER BY COUNT(referral_id) DESC")->fetch_all();
 
+                if (count($data)<10){
+                    $data = array_splice($data,0,9);
+                }
+                $nimadir = "";
+                foreach ($data as $key=> $user){
+                    $key++;
+                    $name = $connection->query("select name from users where chat_id = '$user[1]'")->fetch_assoc()['name'];
+                    $nimadir .="🏅 $key-oʼrin: $name • $user[0] ball\n";
+                }
+
+                $ball = $connection->query("select * from referral where user_id = $chat_id")->num_rows;
+                $reyting = "📊 Botimizga eng koʼp doʼstini taklif qilib ball toʼplaganlar roʼyhati:\n\n$nimadir\n\n✅ Sizda $ball ball. Ko'proq do'stlaringizni taklif etib ballaringizni ko'paytiring!\n\n‼️ Nakrutka qilganlar, pullik spamlardan, 🔞 axloqsiz kanallarda spam tarqatganlar konkursdan chetlashtiriladi. ‼️";
+                $bot->sendMessage($chat_id, $reyting);
+            }
         } catch (Exception $exception) {
         }
     });
