@@ -6,7 +6,7 @@ use Telegram\Bot\Api;
 
 
 $botToken = "5838764950:AAHAaWh50veRdSBKTUNYEfbNO3KIQp7MmfY";
-// https://api.telegram.org/bot5838764950:AAHAaWh50veRdSBKTUNYEfbNO3KIQp7MmfY/setWebhook?url=https://c778-213-230-102-250.eu.ngrok.io/projects/konkurs/index.php
+// https://api.telegram.org/bot5838764950:AAHAaWh50veRdSBKTUNYEfbNO3KIQp7MmfY/setWebhook?url=https://github.com/humoyunmirzo0511/konkurs_bot/blob/main/index.php
 
 /**
  * @var $bot \TelegramBot\Api\Client | \TelegramBot\Api\BotApi
