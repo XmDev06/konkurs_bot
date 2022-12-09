@@ -162,7 +162,7 @@ $bot->on(static function () {
 
 ✅ BOTda keltirilgan 2 ta kanalga obuna bo‘lgach, «A'zo bo‘ldim» tugmasini bosishingiz bilan, sizga maxsus referal link (havola) beriladi. O‘sha link orqali obuna bo‘lgan har bir inson uchun sizga +1 balldan berib boriladi. Qancha ko‘p ball yig‘sangiz, g‘olib bo‘lish imkoniyatingiz shuncha ortib boradi.
 
-💠 31-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va eng ko'p ball yig'gan 5 ishtirokchi sovg'alar bilan taqdirlanadi:
+💠 30-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va 31-dekabr kuni eng ko'p ball yig'gan 5 ishtirokchi Stanford o'quv markazida sovg'alar bilan taqdirlanadi:
 
 🥇 1 - o’ringa smartwach
 🥈 2 - o’ringa airpods
