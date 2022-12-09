@@ -6,7 +6,7 @@ use Telegram\Bot\Api;
 
 
 $botToken = "5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk";
-// https://api.telegram.org/bot5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk/setWebhook?url=https://284c-185-139-137-43.in.ng  rok.io/projects/konkurs/index.php
+// https://api.telegram.org/bot5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk/setWebhook?url=https://dd7f-213-230-82-176.eu.ngrok.io/projects/konkurs/index.php
 
 /**
  * @var $bot \TelegramBot\Api\Client | \TelegramBot\Api\BotApi
@@ -30,11 +30,11 @@ function isMember($chatId, array $channelsId)
 }
 
 
-$bot->command('start', static function (\TelegramBot\Api\Types\Message $message) use ($connection, $mainReplyButton, $bot) {
+$bot->command('start', static function (\TelegramBot\Api\Types\Message $message) use ($majburiykanallar, $connection, $mainReplyButton, $bot) {
     try {
         $chatId = $message->getChat()->getId();
         $firstname = $message->getChat()->getFirstName();
-        $isSubscribed = isMember($chatId, ["-1001882039432", "-1001671907228"]);
+        $isSubscribed = isMember($chatId, $majburiykanallar);
         $is_user = $connection->query("select * from users where chat_id='$chatId'")->num_rows;
         $text = $message->getText();
         $checkSubscribe = "checkSubscribe";
@@ -53,14 +53,14 @@ $bot->command('start', static function (\TelegramBot\Api\Types\Message $message)
         if ($isSubscribed) {
             $phone = $connection->query("select phone_number from users where chat_id='$chatId'")->fetch_assoc()['phone_number'];
             if ($phone != NULL) {
-                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, true, true);
+                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, false, true);
                 $name = $connection->query("select name from users where chat_id = '$chatId'")->fetch_assoc()['name'];
                 $bot->sendMessage($chatId, "$name, siz konkursimiz a'zosiga aylandingiz!\n❗️Iltimos ortiqcha savollar ko'paymasligi uchun avval «Tanlov nizomi» tugmachasini bosib, yaxshilab tanishib chiqing.\nBoshlash uchun «♻Tanlovda ishtirok etish» tugmasini bosing 👇", null, false, false, $button);
             } else {
                 if ($is_user == 0) {
                     $connection->query("insert into users(chat_id) values ('$chatId')");
                 }
-                $bot->sendMessage($chatId, "Ro'yxatdan o'tish uchun ism va familiyangizni kiriting\n(Na'muna: Akromjon Rahimov )", null, false, false, new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => '']]], true, true));
+                $bot->sendMessage($chatId, "Ro'yxatdan o'tish uchun ism va familiyangizni kiriting\n(Na'muna: Akromjon Rahimov )", null, false, false, new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => '']]], false, true));
                 $connection->query("update users set status = 'fish' where chat_id = '$chatId'");
             }
         } else {
@@ -80,13 +80,13 @@ $bot->command('start', static function (\TelegramBot\Api\Types\Message $message)
 });
 
 
-$bot->callbackQuery(static function (\TelegramBot\Api\Types\CallbackQuery $callbackquery) use ($connection, $mainReplyButton, $bot) {
+$bot->callbackQuery(static function (\TelegramBot\Api\Types\CallbackQuery $callbackquery) use ($majburiykanallar, $connection, $mainReplyButton, $bot) {
     try {
         $chatId = $callbackquery->getMessage()->getChat()->getId();
         $data = $callbackquery->getData();
         $firstname = $callbackquery->getMessage()->getChat()->getFirstName();
         $messageId = $callbackquery->getMessage()->getMessageId();
-        $isSubscribed = (isMember($chatId, ["-1001882039432", "-1001671907228"]));
+        $isSubscribed = (isMember($chatId, $majburiykanallar));
         $is_user = $connection->query("select * from users where chat_id='$chatId'")->num_rows;
 
         if (strpos($data, "checkSubscribe") !== false) {
@@ -100,14 +100,14 @@ $bot->callbackQuery(static function (\TelegramBot\Api\Types\CallbackQuery $callb
 
                 $phone = $connection->query("select phone_number from users where chat_id='$chatId'")->fetch_assoc()['phone_number'];
                 if ($phone != NULL) {
-                    $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, true, true);
+                    $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, false, true);
                     $name = $connection->query("select name from users where chat_id = '$chatId'")->fetch_assoc()['name'];
                     $bot->sendMessage($chatId, "$name, siz konkursimiz a'zosiga aylandingiz!\n❗️Iltimos ortiqcha savollar ko'paymasligi uchun avval «Tanlov nizomi» tugmachasini bosib, yaxshilab tanishib chiqing.\nBoshlash uchun «♻Tanlovda ishtirok etish» tugmasini bosing 👇", null, false, false, $button);
                 } else {
                     if ($is_user == 0) {
                         $connection->query("insert into users(chat_id) values ('$chatId')");
                     }
-                    $bot->sendMessage($chatId, "Ro'yxatdan o'tish uchun ism va familiyangizni kiriting\n(Na'muna: Akromjon Rahimov )", null, false, false, new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => '']]], true, true));
+                    $bot->sendMessage($chatId, "Ro'yxatdan o'tish uchun ism va familiyangizni kiriting\n(Na'muna: Akromjon Rahimov )", null, false, false, new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => '']]], false, true));
                     $connection->query("update users set status = 'fish' where chat_id = '$chatId'");
                 }
 
@@ -133,7 +133,7 @@ $bot->on(static function () {
 
 
             if ($status == 'fish') {
-                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => 'Telefon raqamni jo‘natish', 'request_contact' => true]]], true, true);
+                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup([[['text' => 'Telefon raqamni jo‘natish', 'request_contact' => true]]], false, true);
                 $connection->query("update users set name = '$text' where chat_id = '$chat_id'");
 
                 $bot->sendMessage($chat_id, "📲 Ro‘yxatdan o‘tishni yakunlash uchun “Telefon raqamni jo‘natish” tugmasini bosing.\n(Telefon raqamni o‘zingiz yozmang, faqat pastdagi tugmachani bosish orqali yuboring).", null, false, null, $button);
@@ -142,34 +142,33 @@ $bot->on(static function () {
             }
 
             if ($status == "phone") {
-                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, true, true);
-                $contact = $update->getMessage()->getContact()->getPhoneNumber();
-                $connection->query("update users set phone_number = '$contact' where chat_id = '$chat_id'");
-                $connection->query("update users set status = null where chat_id = '$chat_id'");
-                $name = $connection->query("select name from users where chat_id = '$chat_id'")->fetch_assoc()['name'];
-                $bot->sendMessage($chat_id, "$name, siz konkursimiz a'zosiga aylandingiz!\n❗️Iltimos ortiqcha savollar ko'paymasligi uchun avval «Tanlov nizomi» tugmachasini bosib, yaxshilab tanishib chiqing.\nBoshlash uchun «♻Tanlovda ishtirok etish» tugmasini bosing 👇", null, false, false, $button);
+                $button = new \TelegramBot\Api\Types\ReplyKeyboardMarkup($mainReplyButton, false, true);
+                if ($text) {
+                    $bot->sendMessage($chat_id,"Telefon raqamni o‘zingiz yozmang, faqat pastdagi tugmachani bosish orqali yuboring");
+                } else {
+                    $contact = $update->getMessage()->getContact()->getPhoneNumber();
+                    $connection->query("update users set phone_number = '$contact' where chat_id = '$chat_id'");
+                    $connection->query("update users set status = null where chat_id = '$chat_id'");
+                    $name = $connection->query("select name from users where chat_id = '$chat_id'")->fetch_assoc()['name'];
+                    $bot->sendMessage($chat_id, "$name, siz konkursimiz a'zosiga aylandingiz!\n❗️Iltimos ortiqcha savollar ko'paymasligi uchun avval «Tanlov nizomi» tugmachasini bosib, yaxshilab tanishib chiqing.\nBoshlash uchun «♻Tanlovda ishtirok etish» tugmasini bosing 👇", null, false, false, $button);
+                }
             }
 
             if ($text == '🗒 Tanlov shartlari') {
                 $text2 = "🎓 TANLOV SHARTLARI
-@kanal_link kanallari tomonidan tashkil etilgan MEGA KONKURSda 10 ta g‘oliblar to‘plagan ballariga qarab aniqlanadi.
+@Stanford_school_ss va @JuraevLibraryMrMJ kanallari tomonidan tashkil etilgan konkursda 5 ta g‘oliblar to‘plagan ballariga qarab aniqlanadi.
 
 ❓ Ballar qanday to‘planadi?
 
-✅ BOTda keltirilgan 3 ta kanalga obuna bo‘lgach, «Obuna bo‘ldim» tugmasini bosishingiz bilan, sizga maxsus referal link (havola) beriladi. O‘sha link orqali obuna bo‘lgan har bir inson uchun sizga +1 balldan berib boriladi. Qancha ko‘p ball yig‘sangiz, g‘olib bo‘lish imkoniyatingiz shuncha ortib boradi.
+✅ BOTda keltirilgan 2 ta kanalga obuna bo‘lgach, «A'zo bo‘ldim» tugmasini bosishingiz bilan, sizga maxsus referal link (havola) beriladi. O‘sha link orqali obuna bo‘lgan har bir inson uchun sizga +1 balldan berib boriladi. Qancha ko‘p ball yig‘sangiz, g‘olib bo‘lish imkoniyatingiz shuncha ortib boradi.
 
-💠 10-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va eng ko'p ball yig'gan 10 ishtirokchi pul yutuqlari bilan taqdirlanadi:
+💠 31-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va eng ko'p ball yig'gan 5 ishtirokchi pul yutuqlari bilan taqdirlanadi:
 
-🥇 1-o'rin — 5 million so'm
-🥈 2-o'rin — 2 million so'm
-🥉 3-o'rin — 1 million so'm
-🏅 4-o'rin — 500 ming so'm
-🎖 5-o'rin — 400 ming so'm
-🎗 6-7-o'rinlar — 300 ming so'm
-🎗 8-9-o'rinlar — 200 ming so'm
-🎗 10-o'rin — 100 ming so'm
-
-💠 Tanlovda bonus sifatida 30 ball yig'gan barcha ishtirokchilarga bot orqali ID raqam beriladi random (tasodifiy raqamlar generatori) orqali 3 nafar g'olib aniqlanib ularga 100 ming so'mdan pul beriladi. (bu mukofot tepadagi 10ta o'ringa beriladigan yutuqlardan tashqari)
+🥇 1 - o’ringa smartwach
+🥈 2 - o’ringa airpods
+🥉 3 - o’ringa powerbank
+🏅 4 - o’ringa Sherlock Holmes kitobi(ingliz tilida)
+🎖 5 - o’ringa Al Kimyogar (ingliz tilida)
 
 🙂 Faol bo‘ling va pul yutuqlaridan birini yutib oling. Barchaga omad!";
 
@@ -177,7 +176,7 @@ $bot->on(static function () {
             }
 
             if ($text == '☎ Murojaat') {
-                $text1 = "Murojat uchun @humoyunmirzo_7979";
+                $text1 = "Konkurs haqidagi murojaatlar uchun @Stanford_English_School bilan bog'laning\n Bot haqidagi taklif va shikoyatlar uchun @humoyunmirzo_7979";
                 $bot->sendMessage($chat_id, $text1);
             }
 
@@ -185,7 +184,7 @@ $bot->on(static function () {
                 $bot->sendMessage($chat_id, "Ball toʼplash uchun quyida beriladigan referal (maxsus) link orqali odam taklif qilishingiz kerak boʼladi. Taklif etilgan har bir odam uchun 1 ball beriladi");
 
                 $link = "https://t.me/konkurs_roobot?start=$chat_id";
-                $textp = "MEGA KONKURSda qatnashing va pul mukofotlarini birini yutib oling. Tanlovda ishtirok etish uchun 👇\n\n $link";
+                $textp = "Stanford school konkursida qatnashing va pul mukofotlarini birini yutib oling. Tanlovda ishtirok etish uchun 👇\n\n $link";
                 $photo = new CURLFile('photo.jpg');
                 $bot->sendPhoto($chat_id, $photo, $textp);
             }
@@ -193,20 +192,21 @@ $bot->on(static function () {
             if ($text == "📊 Reyting") {
                 $data = $connection->query("SELECT COUNT(referral_id), user_id FROM referral GROUP BY user_id ORDER BY COUNT(referral_id) DESC")->fetch_all();
 
-                if (count($data)<10){
-                    $data = array_splice($data,0,9);
+                if (count($data) < 10) {
+                    $data = array_splice($data, 0, 9);
                 }
                 $nimadir = "";
-                foreach ($data as $key=> $user){
+                foreach ($data as $key => $user) {
                     $key++;
                     $name = $connection->query("select name from users where chat_id = '$user[1]'")->fetch_assoc()['name'];
-                    $nimadir .="🏅 $key-oʼrin: $name • $user[0] ball\n";
+                    $nimadir .= "🏅 $key-oʼrin: $name • $user[0] ball\n";
                 }
 
                 $ball = $connection->query("select * from referral where user_id = $chat_id")->num_rows;
-                $reyting = "📊 Botimizga eng koʼp doʼstini taklif qilib ball toʼplaganlar roʼyhati:\n\n$nimadir\n\n✅ Sizda $ball ball. Ko'proq do'stlaringizni taklif etib ballaringizni ko'paytiring!\n\n‼️ Nakrutka qilganlar, pullik spamlardan, 🔞 axloqsiz kanallarda spam tarqatganlar konkursdan chetlashtiriladi. ‼️";
+                $reyting = "📊 Botimizga eng koʼp doʼstini taklif qilib ball toʼplaganlar roʼyhati:\n\n$nimadir\n\n✅ Sizda $ball ball. Ko'proq do'stlaringizni taklif etib ballaringizni ko'paytiring!\n\n‼️ Nakrutka qilganlar konkursdan chetlashtiriladi. ‼️";
                 $bot->sendMessage($chat_id, $reyting);
             }
+
         } catch (Exception $exception) {
         }
     });
