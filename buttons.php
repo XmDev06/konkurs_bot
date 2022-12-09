@@ -8,4 +8,4 @@ $mainReplyButton =[
 ];
 
 $connection= mysqli_connect('localhost','root','','konkurs');
-$majburiykanallar = ["-1001882039432", "-1001671907228"];
+$majburiykanallar = ["-1001427091960", "-1001277448057"];

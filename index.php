@@ -5,8 +5,8 @@ include 'buttons.php';
 use Telegram\Bot\Api;
 
 
-$botToken = "5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk";
-// https://api.telegram.org/bot5423468616:AAEklW24uXpHE6UelS6QKvHSnQ-9I96n1Yk/setWebhook?url=https://dd7f-213-230-82-176.eu.ngrok.io/projects/konkurs/index.php
+$botToken = "5838764950:AAHAaWh50veRdSBKTUNYEfbNO3KIQp7MmfY";
+// https://api.telegram.org/bot5838764950:AAHAaWh50veRdSBKTUNYEfbNO3KIQp7MmfY/setWebhook?url=https://c778-213-230-102-250.eu.ngrok.io/projects/konkurs/index.php
 
 /**
  * @var $bot \TelegramBot\Api\Client | \TelegramBot\Api\BotApi
@@ -65,8 +65,8 @@ $bot->command('start', static function (\TelegramBot\Api\Types\Message $message)
             }
         } else {
             $button = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup([
-                [['text' => '1️⃣-Kanal', 'url' => 'https://t.me/salomaaaat1']],
-                [['text' => '2️⃣-Kanal', 'url' => 'https://t.me/salomaaaat2']],
+                [['text' => '1️⃣-Kanal', 'url' => 'https://t.me/Stanford_school_ss']],
+                [['text' => '2️⃣-Kanal', 'url' => 'https://t.me/JuraevLibraryMrMJ']],
                 [['text' => 'A\'zo bo\'ldim✅', 'callback_data' => "$checkSubscribe"]],
             ]);
             $text = "Assalomu alaykum!\n\n“Yangi yil” tanlovi rasmiy botiga xush kelibsiz! Tanlovda ishtirok etish uchun quyidagi kanallarga obuna bo‘ling:";
@@ -162,7 +162,7 @@ $bot->on(static function () {
 
 ✅ BOTda keltirilgan 2 ta kanalga obuna bo‘lgach, «A'zo bo‘ldim» tugmasini bosishingiz bilan, sizga maxsus referal link (havola) beriladi. O‘sha link orqali obuna bo‘lgan har bir inson uchun sizga +1 balldan berib boriladi. Qancha ko‘p ball yig‘sangiz, g‘olib bo‘lish imkoniyatingiz shuncha ortib boradi.
 
-💠 31-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va eng ko'p ball yig'gan 5 ishtirokchi pul yutuqlari bilan taqdirlanadi:
+💠 31-dekabr kuni 23:59 da ball yig'ish to'xtatiladi va eng ko'p ball yig'gan 5 ishtirokchi sovg'alar bilan taqdirlanadi:
 
 🥇 1 - o’ringa smartwach
 🥈 2 - o’ringa airpods
@@ -170,7 +170,7 @@ $bot->on(static function () {
 🏅 4 - o’ringa Sherlock Holmes kitobi(ingliz tilida)
 🎖 5 - o’ringa Al Kimyogar (ingliz tilida)
 
-🙂 Faol bo‘ling va pul yutuqlaridan birini yutib oling. Barchaga omad!";
+🙂 Faol bo‘ling va sovg'alardan birini yutib oling. Barchaga omad!";
 
                 $bot->sendMessage($chat_id, $text2);
             }
@@ -183,8 +183,8 @@ $bot->on(static function () {
             if ($text == '♻Tanlovda ishtirok etish') {
                 $bot->sendMessage($chat_id, "Ball toʼplash uchun quyida beriladigan referal (maxsus) link orqali odam taklif qilishingiz kerak boʼladi. Taklif etilgan har bir odam uchun 1 ball beriladi");
 
-                $link = "https://t.me/konkurs_roobot?start=$chat_id";
-                $textp = "Stanford school konkursida qatnashing va pul mukofotlarini birini yutib oling. Tanlovda ishtirok etish uchun 👇\n\n $link";
+                $link = "https://t.me/Stanford_konkurs_bot?start=$chat_id";
+                $textp = "Stanford school konkursida qatnashing va sovg'alardan birini yutib oling. Tanlovda ishtirok etish uchun 👇\n\n $link";
                 $photo = new CURLFile('photo.jpg');
                 $bot->sendPhoto($chat_id, $photo, $textp);
             }
